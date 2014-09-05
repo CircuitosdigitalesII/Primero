@@ -1,21 +1,169 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+#include<windows.h>
+#include<stdio.h>
+#include<time.h>
+#include<conio.h>
+#include<stdlib.h>
+int k=0;   
+void gotoxy(int x, int y)
+{
+     COORD coord; 
+     coord.X=x;
+     coord.Y=y;
+     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),coord);
+}    
+void burbuja(int Vn[],int y)
+{
+     int E=0, i=0, t=0, k=0;
+     for(E=0; E<y-1; E++)
+     { for(i=E+1; i<y; i++)
+       { if(Vn[i]<Vn[E])
+         { t=Vn[i];
+           Vn[i]=Vn[E];
+           Vn[E]=t;
+         }                        
+       } 
+     }
+     for(k=0; k<y; k++)
+     { gotoxy(17,k+3); printf("%d",Vn[k]); }
+} 
+void quicksort(int A[],int izq, int der)
+{
+int i=0, j=0, x=0 , aux=0;//temporales
+i = izq;
+j = der;
+x = A[ (izq + der) /2 ];
+do{
+while( (A[i] < x) && (j <= der) )
+{
+i++;
+}while( (x < A[j]) && (j > izq) ) 
+ {
+          j--;
+ }
+ 
+  if( i <= j ) 
+  { aux = A[i];
+   A[i] = A[j];
+   A[j] = aux; 
+   i++;
+   j--;
+  }
+}while( i <= j );
+if( izq < j )
+quicksort( A, izq, j );
+if( i < der )
+ quicksort( A, i, der );    
+}
+void muestraCadena(int cant,int n[])
+{
+     int i=0;
+     for(i=0;i<cant;i++)
+     {
+                        gotoxy(5,i+3);printf("%d\n",n[i]);         
+     }
+}              
+void secuen(int st[],int x,int m)//vect,  tamañ vect,  # a busc
+{
+     int l=0,s=1,a=20;
+          for(l=0;l<x;l++)
+             {
+              if(st[l]==m)
+              {            
+              gotoxy(39,a);printf("%d.-> Pocicion: %d",s,l+1);
+              gotoxy(7,l+3);printf("->");
+              a++;
+              s=s+1;
+              }
+             }    
+          if (s>1)
+           {
+              gotoxy(39,17);printf("El numero que busca");
+              gotoxy(39,18);printf("existe en las siguientes pociciones");
+           }
+          else
+           {
+           gotoxy(39,18);printf("la busqueda no encontro naaaa..."); 
+           }
+}          
+void binaria(int V[],int bajo, int alto, int key)
+{
+              int search_pos; //valor central
+              int count = 1;              
+              search_pos = (bajo+alto) / 2; 
+               while ((V[search_pos] != key) && (bajo < alto))
+              { 
+                                   count++;
+                                   if(V[search_pos] > key) 
+                                     { 
+                                        alto = search_pos - 1; 
+                                     } 
+                                   else  
+                                     { 
+                                            bajo = search_pos + 1; 
+                                     } 
+                                  search_pos = (bajo + alto) / 2; 
+               }
+             if(V[search_pos] == key)  
+                  {                                 
+                          gotoxy(39,17); printf(" El elemento esta contenido ");                          
+                          gotoxy(39,18); printf(" en el vector ");
+                          gotoxy(39,19); printf(" a partir de la pocicion: %d ",search_pos);                            
+                  }
+             else 
+             { 
+                 gotoxy(39,17); printf("no existe elemento en el vector!!! ");
+                 gotoxy(39,18); printf("ERROR!!!... ");
+             }
+            
+                      
+}            
+main()
+{
+      int p=20,A[20],n=0,V[20];//p es el tamaño del vector...;V[20] es un vector temporal... 
+      int op=0,m=0;
+      srand((unsigned)time(NULL));
+         for(k=0; k<p; k++)
+             {
+             A[k] = (rand()%20)+1;
+             V[k] = A[k];//guardo en vector temporal
+              gotoxy(10,k+3); printf("%d",A[k]);
+             } 
+     do{  
+           gotoxy(25,2);  printf("ORDENAMIENTOS Y BUSQUEDAS");
+           gotoxy(39,7);  printf("1. Ordenar por Burbuja");
+           gotoxy(39,8);  printf("2. Ordenar por QuickSort");
+           gotoxy(39,9);  printf("3. Busqueda Secuencial");
+           gotoxy(39,10); printf("4. Busqueda Binaria");
+           gotoxy(39,11); printf("5. imprimir vectores");
+           gotoxy(39,12); printf("6. limpiar");
+           gotoxy(39,13); printf("7. Salir");
+           gotoxy(39,14); printf("-> ");
+           scanf("%d",&op);
+           
+           switch(op)
+           {
+                    case 1: burbuja(A,p); 
+                            break;
+                    case 2: quicksort(A,0,p-1);//metodo quicksort
+                            muestraCadena(p,A);    //imprime quicksort
+                            break;
+                    case 3: gotoxy(39,15);printf("Ingrese valor a buscar: ");
+                            scanf("%d",&n);//captura digito a buscar..
+                            secuen(V,p,n);//enviamos parametros
+                            break;
+                    case 4: gotoxy(39,15);printf("Ingrese valor a buscar: ");
+                            scanf("%d",&n);
+                            binaria(A,0,p-1,n); getch();                           
+                            break;
+                    case 5:
+                              for(k=0; k<p; k++)
+                              {gotoxy(10,k+3); printf("%d",A[k]);
+                               gotoxy(17,k+3); printf("%d",V[k]);}
+                            break;
+                    case 6:
+                            system("cls");
+                            break;
+           }
+       }while(op!=7);
+}      
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
